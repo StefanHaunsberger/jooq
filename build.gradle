@@ -13,6 +13,8 @@ buildscript {
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		classpath("org.jooq:jooq-meta-extensions:3.14.7")
+		classpath("org.jooq:jooq-meta-extensions-hibernate:3.14.7")
 	}
 }
 
@@ -35,7 +37,8 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	// implementation('org.springframework.boot:spring-boot-starter-jooq') {
+	implementation('org.springframework.boot:spring-boot-starter-jooq') 
+    // {
     //     exclude group: 'org.jooq', module: 'jooq'
     // }
     
@@ -45,13 +48,13 @@ dependencies {
     }
 	// implementation 'org.jooq:jooq-meta-extensions-hibernate'
     // jooqGenerator 'com.h2database:h2:1.4.200'
+	// jooqGenerator 'com.h2database:h2:1.4.200'
 	// jooqGenerator 'org.jooq:jooq-codegen'
 	// jooqGenerator 'org.jooq:jooq-meta-extensions'
-	// jooqGenerator 'com.h2database:h2:1.4.200'
 	jooqGenerator 'org.jooq:jooq-meta-extensions-hibernate'
 
 	// implementation 'org.jooq:jooq-meta-extensions'
-	implementation 'org.jooq:jooq-codegen'
+	// implementation 'org.jooq:jooq-codegen'
     implementation 'org.jooq:jooq-meta-extensions-hibernate'
 }
 
@@ -61,8 +64,8 @@ test {
 
 jooq {
     // use jOOQ version defined in Spring Boot
-    // version = dependencyManagement.importedProperties['jooq.version']
-    version = '3.14.8'  // the default (can be omitted)
+    version = dependencyManagement.importedProperties['jooq.version']
+    // version = '3.14.8'
     // edition = nu.studer.gradle.jooq.JooqEdition.OSS  // the default (can be omitted)
     configurations {
         main {
@@ -70,9 +73,7 @@ jooq {
                 // logging = org.jooq.meta.jaxb.Logging.WARN
                 generator {
                     name = 'org.jooq.codegen.DefaultGenerator'
-                    strategy {
-                        name = 'org.jooq.codegen.DefaultGeneratorStrategy'
-                    }
+                    strategy.name = 'org.jooq.codegen.DefaultGeneratorStrategy'
                     database {
                         name = 'org.jooq.meta.extensions.jpa.JPADatabase'
                         properties {
@@ -90,9 +91,9 @@ jooq {
                     }
                     target {
                         // packageName = 'com.example.jooq.entities.jooq'
-                        // directory = 'target/generated-sources/jooq'
+                        directory = 'target/generated-sources/jooq'
                         packageName = 'nu.studer.sample'
-                        directory = 'src/generated/jooq'
+                        // directory = 'src/generated/jooq'
                     }
                 }
             }
@@ -100,10 +101,10 @@ jooq {
     }
 }
 
-tasks.named('generateJooq').configure {
-    // make jOOQ task participate in incremental builds (which is also a prerequisite for participating in build caching)
-    allInputsDeclared = true
+// tasks.named('generateJooq').configure {
+//     // make jOOQ task participate in incremental builds (which is also a prerequisite for participating in build caching)
+//     allInputsDeclared = true
 
-    // make jOOQ task participate in build caching
-    outputs.cacheIf { true }
-}
+//     // make jOOQ task participate in build caching
+//     outputs.cacheIf { true }
+// }
